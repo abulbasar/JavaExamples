@@ -45,4 +45,8 @@ public class PrimeNumberService {
         }
         return result;
     }
+
+    public List<Integer> findPrimes(int lower, int upper){
+        throw new RuntimeException("Method is not implemented");
+    }
 }

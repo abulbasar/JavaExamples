@@ -8,9 +8,6 @@ import static com.example.common.Utils.*;
 
 public class Ex01 {
 
-
-
-
     public static void main(String[] args){
         System.out.println("Hello World");
         final PrimeNumberService primeNumberService = new PrimeNumberService();
