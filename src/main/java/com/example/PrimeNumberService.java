@@ -1,7 +1,6 @@
 package com.example;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PrimeNumberService {
 
@@ -79,6 +78,28 @@ public class PrimeNumberService {
         for (Integer prime : primes) {
             int lastDigit = prime % 10;
             result[lastDigit]++;
+        }
+        return result;
+    }
+
+    public Map<Integer, Integer> findFrequencyOfLastDigitsV2(int lower, int count){
+        final Map<Integer, Integer> result = new HashMap<>();
+        List<Integer> primes = findPrimesByCount(lower, count);
+        for (Integer prime : primes) {
+            int lastDigit = prime % 10;
+            int currentCount=result.getOrDefault(lastDigit, 0);
+            ++currentCount;
+            result.put(lastDigit, currentCount);
+        }
+        return result;
+    }
+
+    public Set<Integer> findLastDigits(int lower, int count){
+        final Set<Integer> result = new HashSet<>();
+        List<Integer> primes = findPrimesByCount(lower, count);
+        for (Integer prime : primes) {
+            int lastDigit = prime % 10;
+            result.add(lastDigit);
         }
         return result;
     }
