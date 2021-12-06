@@ -47,6 +47,40 @@ public class PrimeNumberService {
     }
 
     public List<Integer> findPrimes(int lower, int upper){
-        throw new RuntimeException("Method is not implemented");
+        final List<Integer> result = new ArrayList<>();
+        int i = lower;
+        while(i<upper){
+            if(isPrime(i)){
+                result.add(i);
+            }
+            ++i;
+        }
+        return result;
     }
+
+    public List<Integer> findPrimesByCount(int count){
+        return findPrimesByCount(2, count);
+    }
+    public List<Integer> findPrimesByCount(int lower, int count){
+        final List<Integer> result = new ArrayList<>();
+        int i = lower;
+        while(result.size()<count){
+            if(isPrime(i)){
+                result.add(i);
+            }
+            ++i;
+        }
+        return result;
+    }
+
+    public int[] findFrequencyOfLastDigits(int lower, int count){
+        final int[] result = new int[10];
+        List<Integer> primes = findPrimesByCount(lower, count);
+        for (Integer prime : primes) {
+            int lastDigit = prime % 10;
+            result[lastDigit]++;
+        }
+        return result;
+    }
+
 }
