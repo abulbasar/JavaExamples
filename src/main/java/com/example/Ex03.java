@@ -9,6 +9,9 @@ public class Ex03 implements Closeable {
 
     /*
 
+    Install sqlite3 on ubuntu
+    sudo apt install sqlite3 -y
+
     https://www.sqlitetutorial.net/sqlite-tutorial/sqlite-describe-table/
     * Open sqlite database
     * sqlite3 /tmp/sqlite.db
