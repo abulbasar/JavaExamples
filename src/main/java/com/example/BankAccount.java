@@ -23,7 +23,7 @@ public class BankAccount implements Comparable<BankAccount>{
 
     private void setAmount(Double value){
         if(value < 0){
-            throw new RuntimeException("Nagative amount is not allowed");
+            throw new RuntimeException("Negative amount is not allowed");
         }
         this.amount = value;
     }
