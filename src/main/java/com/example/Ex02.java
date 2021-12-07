@@ -22,5 +22,9 @@ public class Ex02 {
         println("Class name: " + BankAccount.class.getName());
         abulAccount.withdraw(50.0);
         println(abulAccount);
+
+        rahulAccount.transfer(abulAccount, 100.0);
+        println(abulAccount);
+        println(rahulAccount);
     }
 }

@@ -81,7 +81,7 @@ public class BankAccount {
 
     @Override
     public String toString(){
-        return String.format("Account(id=%d, name: %s, balance: %f)", accountId, name, amount);
+        return String.format("Account(id=%d, name: %s, balance: %.2f)", accountId, name, amount);
     }
 
 
