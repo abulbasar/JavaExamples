@@ -1,6 +1,6 @@
 package com.example;
 
-public class BankAccount {
+public class BankAccount implements Comparable<BankAccount>{
 
     // Member variables
     // private, public: access modifier
@@ -33,11 +33,12 @@ public class BankAccount {
         if(amount > this.amount){
             throw new RuntimeException("Insufficient balance");
         }
-        this.setAmount(this.amount - amount);
+        final double balance = this.amount - amount;
+        this.setAmount(balance);
     }
 
     public void deposit(Double amount){
-        this.amount = this.amount + amount;
+        setAmount(this.amount + amount);
     }
 
     public void transfer(BankAccount target, Double amount){
@@ -85,4 +86,8 @@ public class BankAccount {
     }
 
 
+    @Override
+    public int compareTo(BankAccount other) {
+        return - this.accountId.compareTo(other.getAccountId());
+    }
 }
