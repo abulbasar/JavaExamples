@@ -11,6 +11,10 @@ public class BankAccount implements Comparable<BankAccount>{
     private Double amount;
     private String status;
 
+    public BankAccount(){
+
+    }
+
     public BankAccount(Long accountId, String name, Double amount, String status){
         this.setAmount(amount);
         this.accountId = accountId;
@@ -22,7 +26,7 @@ public class BankAccount implements Comparable<BankAccount>{
         return this.amount;
     }
 
-    private void setAmount(Double value){
+    public void setAmount(Double value){
         if(value < 0){
             throw new RuntimeException("Negative amount is not allowed");
         }
