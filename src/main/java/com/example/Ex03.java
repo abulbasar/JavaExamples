@@ -2,6 +2,7 @@ package com.example;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 public class Ex03 {
 
@@ -26,12 +27,14 @@ public class Ex03 {
         String backend = "RDBMS";
         AccountService accountService;
 
+        final Random random = new Random();
+
         if("RDBMS".equals(backend)){
             String connStr = "jdbc:sqlite:///tmp/sqlite.db";
             final DBSessionService dbSessionService = new DBSessionService(connStr);
             dbSessionService.connect();
             accountService = new RdbmsAccountService(dbSessionService);
-            final BankAccount account = new BankAccount(7L, "Abul", 100.0, "Active");
+            final BankAccount account = new BankAccount(random.nextLong(), "Abul", 100.0, "Active");
             accountService.saveAccount(account);
             final List<BankAccount> bankAccounts = accountService.loadAccounts();
             final BankAccount bankAccount = accountService.loadAccount(5L);
@@ -41,6 +44,5 @@ public class Ex03 {
         }else{
             throw new RuntimeException("Invalid backend: " + backend);
         }
-        accountService.loadAccount(1L);
     }
 }
