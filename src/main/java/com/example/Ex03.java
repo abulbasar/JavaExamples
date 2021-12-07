@@ -1,9 +1,10 @@
 package com.example;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Ex03 {
-    public static void main(String[] args){
+    public static void main(String[] args) throws SQLException {
         String backend = "RDBMS";
         AccountService accountService;
         if("RDBMS".equals(backend)){

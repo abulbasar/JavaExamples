@@ -1,6 +1,7 @@
 package com.example;
 
 public class BankAccount implements Comparable<BankAccount>{
+    public static final String TABLE_NAME = "account";
 
     // Member variables
     // private, public: access modifier
