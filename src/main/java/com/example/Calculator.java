@@ -16,4 +16,8 @@ public class Calculator {
     public static double pow(int i, int j){
         return Math.pow(i, j);
     }
+
+    public static int inverse(int d){
+        return 1/d;
+    }
 }

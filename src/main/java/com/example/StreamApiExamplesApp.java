@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class StreamApp {
+public class StreamApiExamplesApp {
 
     /*
     * Download the data file https://drive.google.com/file/d/16etgjQXq4LAtbEn7Rs4DBDWmanxfUiSf/view?usp=sharing
@@ -118,6 +117,6 @@ public class StreamApp {
     }
 
     public static void main(String[] args) throws IOException {
-        new StreamApp().start();
+        new StreamApiExamplesApp().start();
     }
 }

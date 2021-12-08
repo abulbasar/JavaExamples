@@ -14,7 +14,7 @@ public class CalculatorTest {
     }
     @Before
     public void setUp() throws Exception {
-        System.out.println("before");
+        System.out.println("before a test method");
     }
 
     @Test
@@ -49,9 +49,15 @@ public class CalculatorTest {
         assertEquals(2, Calculator.divide(4, 2), DELTA);
     }
 
+    @Test(expected = ArithmeticException.class)
+    public void testDivideByZero(){
+        System.out.println("test divide by zero");
+        Calculator.inverse( 0);
+    }
+
     @After
     public void tearDown() throws Exception {
-        System.out.println("after");
+        System.out.println("after a test method");
     }
 
     @AfterClass
