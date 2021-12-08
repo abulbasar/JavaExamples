@@ -41,7 +41,7 @@ public class RdbmsAccountService implements AccountService{
             break;
         }
         if(result == null){
-            throw new RecordNotException();
+            throw new RecordNotException(accountId);
         }
         return result;
     }

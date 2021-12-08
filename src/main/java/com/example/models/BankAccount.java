@@ -93,6 +93,6 @@ public class BankAccount implements Comparable<BankAccount>{
 
     @Override
     public int compareTo(BankAccount other) {
-        return - this.accountId.compareTo(other.getAccountId());
+        return this.accountId.compareTo(other.getAccountId());
     }
 }

@@ -6,6 +6,7 @@ import com.example.services.*;
 
 import java.io.Closeable;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -78,12 +79,14 @@ public class Ex03 implements Closeable {
             accountService.saveAccount(account);
         }
         final List<BankAccount> bankAccounts = accountService.loadAccounts();
+        Collections.sort(bankAccounts);
         long accountId = 6854842105732104592L;
         try {
             final BankAccount bankAccount = accountService.loadAccount(accountId);
             throw new RuntimeException("Dummy exception");
         }catch (RecordNotException e){
-            System.err.println("Account is not found: " + accountId);
+            final long id = e.getId();
+            System.err.println(e.getMessage());
         }
         System.out.println("Process is complete");
     }
