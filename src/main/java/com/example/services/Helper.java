@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.models.BankAccount;
+import org.sqlite.util.StringUtils;
 
 import java.util.Random;
 
@@ -32,5 +33,16 @@ public class Helper {
         String status = statuses[random.nextInt(statuses.length)];
         long id = idGeneratorUsingLambdaV2.generateId();
         return new BankAccount(id, name, amount, status);
+    }
+
+    public static String randomString(int lower, int upper){
+        int length = random.nextInt(upper-lower) + lower;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int base =  random.nextBoolean()?65:97;
+            final char c = (char) (random.nextInt(26) + base);
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }
