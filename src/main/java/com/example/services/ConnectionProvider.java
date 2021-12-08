@@ -1,16 +1,15 @@
-package com.example;
+package com.example.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DBSessionService {
+public class ConnectionProvider {
     private Connection conn = null;
     private String connectionString;
 
     public void connect() {
         try {
-
             // create a connection to the database
             conn = DriverManager.getConnection(this.connectionString);
             System.out.println("Connection to SQLite has been established.");
@@ -19,7 +18,7 @@ public class DBSessionService {
         }
     }
 
-    DBSessionService(String connectionString){
+    public ConnectionProvider(String connectionString){
         this.connectionString = connectionString;
     }
 
@@ -32,6 +31,9 @@ public class DBSessionService {
     }
 
     public Connection getConnection() {
+        if(this.conn == null){
+            this.connect();
+        }
         return this.conn;
     }
 }

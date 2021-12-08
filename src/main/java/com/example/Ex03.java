@@ -1,5 +1,9 @@
 package com.example;
 
+import com.example.exceptions.RecordNotException;
+import com.example.models.BankAccount;
+import com.example.services.*;
+
 import java.io.Closeable;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,23 +32,24 @@ public class Ex03 implements Closeable {
     *
     * */
 
-    DBSessionService dbSessionService;
+    ConnectionProvider connectionProvider;
     AccountService accountService;
+    final Random random = new Random();
 
-    private DBSessionService getDbSessionService(){
-        if(dbSessionService == null) {
+    private ConnectionProvider getConnectionProvider(){
+        if(connectionProvider == null) {
             String connStr = "jdbc:sqlite:///tmp/sqlite.db";
-            dbSessionService =new DBSessionService(connStr);
-            dbSessionService.connect();
+            connectionProvider =new ConnectionProvider(connStr);
+            connectionProvider.connect();
         }
-        return dbSessionService;
+        return connectionProvider;
     }
 
     private AccountService getAccountService(String backend) throws SQLException {
         if(accountService == null) {
             if ("RDBMS".equals(backend)) {
-                final DBSessionService dbSessionService = getDbSessionService();
-                accountService = new RdbmsAccountService(this.dbSessionService);
+                final ConnectionProvider connectionProvider = getConnectionProvider();
+                accountService = new RdbmsAccountService(connectionProvider);
             } else if ("Mongodb".equals(backend)) {
                 accountService = new MongoDbAccountService();
             } else {
@@ -54,21 +59,39 @@ public class Ex03 implements Closeable {
         return accountService;
     }
 
-    public void start() throws SQLException {
+
+
+    public void start() throws SQLException, RecordNotException {
         String backend = "RDBMS";
         AccountService accountService = getAccountService(backend);
-        final Random random = new Random();
-        final BankAccount account = new BankAccount(random.nextLong(), "Abul", 100.0, "Active");
-        accountService.saveAccount(account);
+        final BankAccount sample = Helper.createSample();
+        accountService.saveAccount(sample);
+        try {
+            accountService.saveAccount(sample);
+        }catch (SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getErrorCode());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            final BankAccount account = Helper.createSample();
+            accountService.saveAccount(account);
+        }
         final List<BankAccount> bankAccounts = accountService.loadAccounts();
-        final BankAccount bankAccount = accountService.loadAccount(5L);
+        long accountId = 6854842105732104592L;
+        try {
+            final BankAccount bankAccount = accountService.loadAccount(accountId);
+            throw new RuntimeException("Dummy exception");
+        }catch (RecordNotException e){
+            System.err.println("Account is not found: " + accountId);
+        }
         System.out.println("Process is complete");
     }
 
     @Override
     public void close(){
-        if(dbSessionService != null){
-            dbSessionService.close();
+        if(connectionProvider != null){
+            connectionProvider.close();
         }
     }
 
@@ -77,9 +100,13 @@ public class Ex03 implements Closeable {
     }
 
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, RecordNotException {
         final Ex03 app = new Ex03();
-        app.start();
-        app.close();
+        try {
+            app.start();
+        }finally {
+            app.close();
+        }
+
     }
 }

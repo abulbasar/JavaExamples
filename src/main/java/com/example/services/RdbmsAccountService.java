@@ -1,4 +1,8 @@
-package com.example;
+package com.example.services;
+
+import com.example.exceptions.InsufficientBalanceException;
+import com.example.exceptions.RecordNotException;
+import com.example.models.BankAccount;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -6,10 +10,10 @@ import java.util.List;
 
 public class RdbmsAccountService implements AccountService{
 
-    private DBSessionService dbSessionService;
+    private ConnectionProvider connectionProvider;
 
-    public RdbmsAccountService(DBSessionService dbSessionService) throws SQLException {
-        this.dbSessionService = dbSessionService;
+    public RdbmsAccountService(ConnectionProvider connectionProvider) throws SQLException {
+        this.connectionProvider = connectionProvider;
         this.initTable();
     }
 
@@ -20,15 +24,15 @@ public class RdbmsAccountService implements AccountService{
                 + " amount real,\n"
                 + " status text\n"
                 + ");";
-        final Connection connection = dbSessionService.getConnection();
+        final Connection connection = connectionProvider.getConnection();
         final Statement statement = connection.createStatement();
         statement.execute(sql);
     }
 
     @Override
-    public BankAccount loadAccount(Long accountId) throws SQLException {
+    public BankAccount loadAccount(Long accountId) throws SQLException, RecordNotException {
         final String sql = String.format("select * from %s where id = %d", BankAccount.TABLE_NAME, accountId);
-        final Connection connection = dbSessionService.getConnection();
+        final Connection connection = connectionProvider.getConnection();
         final Statement statement = connection.createStatement();
         final ResultSet resultSet = statement.executeQuery(sql);
         BankAccount result = null;
@@ -36,13 +40,16 @@ public class RdbmsAccountService implements AccountService{
             result = loadAccount(resultSet);
             break;
         }
+        if(result == null){
+            throw new RecordNotException();
+        }
         return result;
     }
 
     @Override
     public void saveAccount(BankAccount account) throws SQLException {
         final String statement = String.format("insert into %s (id, name, status, amount) values (?,?,?,?)", BankAccount.TABLE_NAME);
-        final Connection connection = dbSessionService.getConnection();
+        final Connection connection = connectionProvider.getConnection();
         final PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setLong(1, account.getAccountId());
         preparedStatement.setString(2, account.getName());
@@ -59,7 +66,7 @@ public class RdbmsAccountService implements AccountService{
     @Override
     public List<BankAccount> loadAccounts() throws SQLException {
         final String sql = String.format("select * from %s", BankAccount.TABLE_NAME);
-        final Connection connection = dbSessionService.getConnection();
+        final Connection connection = connectionProvider.getConnection();
         final Statement statement = connection.createStatement();
         final ResultSet resultSet = statement.executeQuery(sql);
         List<BankAccount> result = new ArrayList<>();
@@ -68,6 +75,35 @@ public class RdbmsAccountService implements AccountService{
             result.add(account);
         }
         return result;
+    }
+
+    @Override
+    public void withdraw(long accountId, double amount) throws SQLException, RecordNotException, InsufficientBalanceException {
+        final BankAccount account = loadAccount(accountId);
+        if(account.getAmount()<amount){
+            throw new InsufficientBalanceException();
+        }
+        double newAmount = account.getAmount() - amount;
+        account.setAmount(newAmount);
+        saveAccount(account);
+    }
+
+    @Override
+    public void deposit(long accountId, double amount) throws SQLException, RecordNotException {
+        final BankAccount account = loadAccount(accountId);
+        double newAmount = account.getAmount() + amount;
+        account.setAmount(newAmount);
+        saveAccount(account);
+    }
+
+    @Override
+    public void transfer(long sourceAccountId, long targetAccountId, double amount) throws SQLException, InsufficientBalanceException, RecordNotException {
+        withdraw(sourceAccountId, amount);
+        try {
+            deposit(targetAccountId, amount);
+        }catch (RecordNotException ex){
+            deposit(sourceAccountId, amount);
+        }
     }
 
     private BankAccount loadAccount(ResultSet resultSet) throws SQLException {

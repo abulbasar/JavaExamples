@@ -1,4 +1,4 @@
-package com.example;
+package com.example.models;
 
 public class BankAccount implements Comparable<BankAccount>{
     public static final String TABLE_NAME = "account";
@@ -87,7 +87,7 @@ public class BankAccount implements Comparable<BankAccount>{
 
     @Override
     public String toString(){
-        return String.format("Account(id=%d, name: %s, balance: %.2f)", accountId, name, amount);
+        return String.format("Account(id=%d, name: %s, balance: %.2f, status=%s)", accountId, name, amount, status);
     }
 
 
