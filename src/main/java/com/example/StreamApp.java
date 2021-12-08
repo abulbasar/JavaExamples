@@ -9,12 +9,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamApp {
 
+    /*
+    * Download the data file https://drive.google.com/file/d/16etgjQXq4LAtbEn7Rs4DBDWmanxfUiSf/view?usp=sharing
+    * */
 
     public void start() throws IOException {
         // https://www.univocity.com/pages/univocity_parsers_tutorial
@@ -30,7 +34,7 @@ public class StreamApp {
         stream = Files.lines(path, StandardCharsets.UTF_8);
         final List<String> lines = stream.collect(Collectors.toList());
 
-        final Stream<Movie> movieStream
+        Stream<Movie> movieStream
                 = lines.stream()
                 .filter(line -> line.length() > 0 && !line.startsWith("movieId"))
                 .map(line -> {
@@ -41,6 +45,20 @@ public class StreamApp {
                         movie.setGenres(tokens[2]);
                         return movie;
                     });
+
+
+        movieStream
+                = lines.stream().flatMap(line -> {
+                    if(!line.isEmpty() && !line.startsWith("movieId")) {
+                        final String[] tokens = parser.parseLine(line);
+                        final Movie movie = new Movie();
+                        movie.setMovieId(Integer.parseInt(tokens[0]));
+                        movie.setTitle(tokens[1]);
+                        movie.setGenres(tokens[2]);
+                        return Stream.of(movie);
+                    }
+                    return Stream.empty();
+                });
 
 
         final List<Movie> movies = movieStream.collect(Collectors.toList());
