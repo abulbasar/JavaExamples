@@ -15,4 +15,5 @@ public interface AccountService {
     void withdraw(long accountId, double amount) throws SQLException, RecordNotException, InsufficientBalanceException;
     void deposit(long accountId, double amount) throws SQLException, RecordNotException;
     void transfer(long sourceAccountId, long targetAccountId, double amount) throws SQLException, InsufficientBalanceException, RecordNotException;
+    boolean isActive(long accountId) throws SQLException, RecordNotException;
 }

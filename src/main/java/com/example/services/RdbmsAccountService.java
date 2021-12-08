@@ -106,6 +106,12 @@ public class RdbmsAccountService implements AccountService{
         }
     }
 
+    @Override
+    public boolean isActive(long accountId) throws SQLException, RecordNotException {
+        final BankAccount account = loadAccount(accountId);
+        return "Active".equals(account.getStatus());
+    }
+
     private BankAccount loadAccount(ResultSet resultSet) throws SQLException {
         final BankAccount account = new BankAccount();
         account.setAccountId(resultSet.getLong("id"));

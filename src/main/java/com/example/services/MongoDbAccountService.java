@@ -47,4 +47,9 @@ public class MongoDbAccountService implements AccountService{
     public void transfer(long sourceAccountId, long targetAccountId, double amount) throws SQLException, InsufficientBalanceException, RecordNotException {
 
     }
+
+    @Override
+    public boolean isActive(long accountId) throws SQLException, RecordNotException {
+        return false;
+    }
 }

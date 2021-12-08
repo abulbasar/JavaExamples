@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class) // Use this annotation to process Mockito annotation processing
+//@RunWith(MockitoJUnitRunner.class) // Use this annotation to process Mockito annotation processing
 public class AccountServiceTest {
 
     @Mock
@@ -35,13 +35,18 @@ public class AccountServiceTest {
         when(accountService.loadAccount(1L)).thenReturn(bankAccount);
         doReturn(bankAccount).when(accountService).loadAccount(1L);
 
-
-
         assertNull(accountService.loadAccount(0L));
         assertNotNull(accountService.loadAccount(1L));
-        when(accountService.loadAccount(anyLong())).thenReturn(bankAccount);
 
-        verify(accountService).getAccountStatus(1L);
+        when(accountService.loadAccount(anyLong())).thenReturn(bankAccount);
+        assertNotNull(accountService.loadAccount(0L));
+        assertNotNull(accountService.loadAccount(1L));
+
+        assertEquals("Active", accountService.loadAccount(1L).getStatus());
+        final BankAccount account = accountService.loadAccount(1L);
+        assertNotNull(account);
+        assertTrue(account.isActive());
+        //verify(accountService).getAccountStatus(1L);
     }
 
     @Test
