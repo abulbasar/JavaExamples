@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 
-//@RunWith(MockitoJUnitRunner.class) // Use this annotation to process Mockito annotation processing
+@RunWith(MockitoJUnitRunner.class) // Use this annotation to process Mockito annotation processing
 public class AccountServiceTest {
 
     @Mock
